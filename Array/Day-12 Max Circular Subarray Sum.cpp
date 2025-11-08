@@ -1,44 +1,41 @@
+#include <climits>
 #include <iostream>
 #include <vector>
-#include <climits>
 
 using namespace std;
 
 class Solution {
-  public:
-    int maxCircularSum(vector<int> &arr) {
-        int n = arr.size();
-        int suffixSum = arr[n - 1];
+   public:
+    int maxCircularSum(vector<int>& arr) {
+        int totalSum = 0;
+        int currMaxSum = 0, currMinSum = 0;
+        int maxSum = arr[0], minSum = arr[0];
 
-        vector<int> maxSuffix(n + 1, 0);
-        maxSuffix[n - 1] = arr[n - 1];
-        
-        for(int i = n - 2; i >= 0; i--) {
-            suffixSum = suffixSum + arr[i];
-            maxSuffix[i] = max(maxSuffix[i + 1], suffixSum);
+        for (int i = 0; i < arr.size(); i++) {
+            // Kadane's to find maximum sum subarray
+            currMaxSum = max(currMaxSum + arr[i], arr[i]);
+            maxSum = max(maxSum, currMaxSum);
+
+            // Kadane's to find minimum sum subarray
+            currMinSum = min(currMinSum + arr[i], arr[i]);
+            minSum = min(minSum, currMinSum);
+
+            // Sum of all the elements of input array
+            totalSum += arr[i];
         }
 
-        int circularSum = arr[0];
+        int normalSum = maxSum;
+        int circularSum = totalSum - minSum;
 
-        int normalSum = arr[0];
-        
-        int currSum = 0;
-        int prefix = 0;
-        
-        for(int i = 0; i < n; i++) {
+        // If the minimum subarray is equal to total Sum
+        // then we just need to return normalSum
+        if (minSum == totalSum) return normalSum;
 
-            currSum = max(currSum + arr[i], arr[i]);
-            normalSum = max(normalSum, currSum);
-
-            prefix = prefix + arr[i];
-            circularSum = max(circularSum, prefix + maxSuffix[i+1]);
-        }
-        
-        return max(circularSum, normalSum);
+        return max(normalSum, circularSum);
     }
 };
 
-int main(){
+int main() {
     Solution sol;
     vector<int> arr = {1, -2, 3, 2};
     cout << sol.maxCircularSum(arr) << endl;
