@@ -1,0 +1,5 @@
+BasedOnStyle: Google
+IndentWidth: 4
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+# AllowShortBlocksOnASingleLine: Always
+# AllowShortLoopsOnASingleLine: true
